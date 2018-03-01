@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     
     private var cell: CGFloat = 0
     private var cells = [String: UIView]() // Make Dic
+    private var selectedCell: UIView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +24,9 @@ class ViewController: UIViewController {
         
         //Find correct size for cells - file under reasons to get a comp sci degree
         let cellSizeCount = getCellSizeCount(x: x, y: y)
-//        print(cellSizeCount.0)
-//        print(cellSizeCount.1)
-//        print(cellSizeCount.2)
+        print(cellSizeCount.0)
+        print(cellSizeCount.1)
+        print(cellSizeCount.2)
         
         // num of boxes per col/row for loop
         let countViewCol = Int(cellSizeCount.1)
@@ -33,6 +34,9 @@ class ViewController: UIViewController {
         
         // handle for all size devices with view.frame to get box correct box size
         cell = cellSizeCount.0
+//        if (cell.truncatingRemainder(dividingBy: y) != 0) {
+//            header = y - (cell * CGFloat(countViewRow))
+//        }
         
         // renderCells
         for j in 0...countViewRow { //for vert
@@ -58,13 +62,17 @@ class ViewController: UIViewController {
         
     }
     
+//    fileprivate func getSizeCount2 (x: CGFloat, y: CGFloat) {
+//        x /
+//    }
+    
     fileprivate func getCellSizeCount (x: CGFloat, y: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
         
         // compute number of row and cols, and box size for correct device view.frame
         let ratio = x / y
-        let n = CGFloat(50)  //TODO set for specific devices
-        let ncols = sqrt(30 * ratio)
-        let nrows = 30 / ncols
+        let n = CGFloat(400)  //TODO set for specific devices
+        let ncols = sqrt(n * ratio)
+        let nrows = n / ncols
         
         // find best height fill
         var nrows1 = ceil(nrows)
@@ -110,8 +118,31 @@ class ViewController: UIViewController {
         print(i, j)
         
         let key = "\(i)|\(j)"
-        let over = cells[key]
-        over?.backgroundColor = .white
+        guard let over = cells[key] else { return }
+        
+        if selectedCell != over {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                //return to scale value of 1
+                self.selectedCell?.layer.transform = CATransform3DIdentity
+            }, completion: nil)
+        }
+        
+        //track selected cell
+        selectedCell = over
+        //bring to front
+        view.bringSubview(toFront: over)
+        
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            over.layer.transform = CATransform3DMakeScale(3, 3, 3)
+        }, completion: nil)
+        
+        //check for finger up
+        if gesture.state == .ended {
+            UIView.animate(withDuration: 0.5, delay: 0.25, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+                over.layer.transform = CATransform3DIdentity
+            }, completion: nil)
+        }
         
     }
     
