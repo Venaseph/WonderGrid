@@ -19,14 +19,16 @@ class ViewController: UIViewController {
         let y = view.frame.height
         
         let boxSizeCount = getBoxSizeCount(x: x, y: y)
+        print(boxSizeCount.0)
+        print(boxSizeCount.1)
+        print(boxSizeCount.2)
         
         //num of boxes per col/row for loop
         let countViewCol = Int(boxSizeCount.1)
         let countViewRow = Int(boxSizeCount.2)
         
         //handle for all size devices with view.frame to get box correct box size
-        let width = boxSizeCount.0
-        let height = boxSizeCount.0
+        let edge = boxSizeCount.0
         
         //renderCells
         for j in 0...countViewRow { //for vert
@@ -35,7 +37,7 @@ class ViewController: UIViewController {
                 //generate random color value for each box
                 cellView.backgroundColor = randomColor()
                 //set position for boxes, i/j must be cast to CGFloat to fix binary op compat
-                cellView.frame = CGRect(x: CGFloat(i) * width, y: CGFloat(j) * height, width: width, height: height)
+                cellView.frame = CGRect(x: CGFloat(i) * edge, y: CGFloat(j) * edge, width: edge, height: edge)
                 cellView.layer.borderWidth = 0.5
                 //expects a CGColor
                 cellView.layer.borderColor = UIColor.black.cgColor
@@ -52,11 +54,11 @@ class ViewController: UIViewController {
         
         // compute number of row and cols, and box size for correct device view.frame
         let ratio = x / y
-        let n = CGFloat(30)
+        let n = CGFloat(50)
         let ncols = sqrt(30 * ratio)
         let nrows = 30 / ncols
         
-        //find correct height fill
+        //find best height fill
         var nrows1 = ceil(nrows)
         var ncols1 = ceil(n / nrows1)
         while (nrows1 * ratio < ncols) {
@@ -65,7 +67,7 @@ class ViewController: UIViewController {
         }
         let cellSize1 = y / nrows1
         
-        //find correct width fill
+        //find best width fill
         var ncols2 = ceil(ncols)
         var nrows2 = ceil(n / ncols2)
         while (ncols2 < nrows2 * ratio) {
@@ -79,13 +81,13 @@ class ViewController: UIViewController {
         var ncol: CGFloat
         var cellSize: CGFloat
         if (cellSize1 < cellSize2) {
-            nrow = nrows2
-            ncol = ncols2
-            cellSize = cellSize2
-        } else {
             nrow = nrows1
             ncol = ncols1
             cellSize = cellSize1
+        } else {
+            nrow = nrows2
+            ncol = ncols2
+            cellSize = cellSize2
         }
         
         return (cellSize, ncol, nrow)
