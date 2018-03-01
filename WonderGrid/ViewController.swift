@@ -10,6 +10,9 @@ import UIKit
 
 
 class ViewController: UIViewController {
+    
+    private var cell: CGFloat = 0
+    private var cells = [String: UIView]() // Make Dic
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +32,7 @@ class ViewController: UIViewController {
         let countViewRow = Int(cellSizeCount.2)
         
         // handle for all size devices with view.frame to get box correct box size
-        let cell = cellSizeCount.0
+        cell = cellSizeCount.0
         
         // renderCells
         for j in 0...countViewRow { //for vert
@@ -43,6 +46,10 @@ class ViewController: UIViewController {
                 // expects a CGColor
                 cellView.layer.borderColor = UIColor.black.cgColor
                 view.addSubview(cellView)
+                
+                //add to dic/map
+                let key = "\(i)|\(j)"
+                cells[key] = cellView
             }
         }
         
@@ -55,7 +62,7 @@ class ViewController: UIViewController {
         
         // compute number of row and cols, and box size for correct device view.frame
         let ratio = x / y
-        let n = CGFloat(50)
+        let n = CGFloat(50)  //TODO set for specific devices
         let ncols = sqrt(30 * ratio)
         let nrows = 30 / ncols
         
@@ -96,17 +103,16 @@ class ViewController: UIViewController {
     }
     
     @objc func handlePan(gesture: UIPanGestureRecognizer) {
-        //get current location x/y
+        //get current location x/y conv
         let location = gesture.location(in: view)
-        print(location)
+        let i = Int(location.x / cell)
+        let j = Int(location.y / cell)
+        print(i, j)
         
-        //find cell using width
+        let key = "\(i)|\(j)"
+        let over = cells[key]
+        over?.backgroundColor = .white
         
-        for subview in view.subviews {
-            if subview.frame.contains(location) {
-                subview.backgroundColor = .black
-            }
-        }
     }
     
     fileprivate func randomColor() -> UIColor {
