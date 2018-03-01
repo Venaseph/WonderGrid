@@ -39,7 +39,7 @@ class ViewController: UIViewController {
 //        }
         
         // renderCells
-        for j in 0...countViewRow { //for vert
+        for j in 0...countViewRow + 3 { //for vert
             for i in 0...countViewCol { //for horiz
                 let cellView = UIView()
                 // generate random color value for each box
@@ -62,9 +62,9 @@ class ViewController: UIViewController {
         
     }
     
-//    fileprivate func getSizeCount2 (x: CGFloat, y: CGFloat) {
-//        x /
-//    }
+    fileprivate func getSizeCount2 (x: CGFloat, y: CGFloat) {
+        
+    }
     
     fileprivate func getCellSizeCount (x: CGFloat, y: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
         
