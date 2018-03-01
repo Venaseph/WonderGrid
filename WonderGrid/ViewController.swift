@@ -18,39 +18,40 @@ class ViewController: UIViewController {
         let x = view.frame.width
         let y = view.frame.height
         
-        let boxSizeCount = getBoxSizeCount(x: x, y: y)
-        print(boxSizeCount.0)
-        print(boxSizeCount.1)
-        print(boxSizeCount.2)
+        //Find correct size for cells - file under reasons to get a comp sci degree
+        let cellSizeCount = getCellSizeCount(x: x, y: y)
+//        print(cellSizeCount.0)
+//        print(cellSizeCount.1)
+//        print(cellSizeCount.2)
         
-        //num of boxes per col/row for loop
-        let countViewCol = Int(boxSizeCount.1)
-        let countViewRow = Int(boxSizeCount.2)
+        // num of boxes per col/row for loop
+        let countViewCol = Int(cellSizeCount.1)
+        let countViewRow = Int(cellSizeCount.2)
         
-        //handle for all size devices with view.frame to get box correct box size
-        let edge = boxSizeCount.0
+        // handle for all size devices with view.frame to get box correct box size
+        let cell = cellSizeCount.0
         
-        //renderCells
+        // renderCells
         for j in 0...countViewRow { //for vert
             for i in 0...countViewCol { //for horiz
                 let cellView = UIView()
-                //generate random color value for each box
+                // generate random color value for each box
                 cellView.backgroundColor = randomColor()
-                //set position for boxes, i/j must be cast to CGFloat to fix binary op compat
-                cellView.frame = CGRect(x: CGFloat(i) * edge, y: CGFloat(j) * edge, width: edge, height: edge)
+                // set position for boxes, i/j must be cast to CGFloat to fix binary op compat
+                cellView.frame = CGRect(x: CGFloat(i) * cell, y: CGFloat(j) * cell, width: cell, height: cell)
                 cellView.layer.borderWidth = 0.5
-                //expects a CGColor
+                // expects a CGColor
                 cellView.layer.borderColor = UIColor.black.cgColor
                 view.addSubview(cellView)
             }
         }
         
-        //setup gesture detection
+        // setup gesture detection
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
         
     }
     
-    fileprivate func getBoxSizeCount (x: CGFloat, y: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
+    fileprivate func getCellSizeCount (x: CGFloat, y: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
         
         // compute number of row and cols, and box size for correct device view.frame
         let ratio = x / y
@@ -58,7 +59,7 @@ class ViewController: UIViewController {
         let ncols = sqrt(30 * ratio)
         let nrows = 30 / ncols
         
-        //find best height fill
+        // find best height fill
         var nrows1 = ceil(nrows)
         var ncols1 = ceil(n / nrows1)
         while (nrows1 * ratio < ncols) {
@@ -67,7 +68,7 @@ class ViewController: UIViewController {
         }
         let cellSize1 = y / nrows1
         
-        //find best width fill
+        // find best width fill
         var ncols2 = ceil(ncols)
         var nrows2 = ceil(n / ncols2)
         while (ncols2 < nrows2 * ratio) {
@@ -76,10 +77,11 @@ class ViewController: UIViewController {
         }
         let cellSize2 = x / ncols2
         
-        //Find optimal size/counts conditional
+        //Find optimal size/counts conditional based on above
         var nrow: CGFloat
         var ncol: CGFloat
         var cellSize: CGFloat
+        
         if (cellSize1 < cellSize2) {
             nrow = nrows1
             ncol = ncols1
@@ -89,7 +91,7 @@ class ViewController: UIViewController {
             ncol = ncols2
             cellSize = cellSize2
         }
-        
+        // Fun with Tuples
         return (cellSize, ncol, nrow)
     }
     
