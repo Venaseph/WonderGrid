@@ -68,7 +68,7 @@ class ViewController: UIViewController {
     
     fileprivate func getCellSizeCount (x: CGFloat, y: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
         
-        // compute number of row and cols, and box size for correct device view.frame
+        // compute number of row and cols, and box size for correct device view.frame off n
         let ratio = x / y
         let n = CGFloat(400)  //TODO set for specific devices
         let ncols = sqrt(n * ratio)
@@ -132,7 +132,7 @@ class ViewController: UIViewController {
         //bring to front
         view.bringSubview(toFront: over)
         
-        
+        //grow
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             over.layer.transform = CATransform3DMakeScale(3, 3, 3)
         }, completion: nil)
