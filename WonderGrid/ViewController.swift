@@ -39,7 +39,7 @@ class ViewController: UIViewController {
         cell = cellSizeCount.0
         
         // renderCells
-        for j in 0...countViewRow { //for vert
+        for j in 0...countViewRow + 3 { //for vert
             for i in 0...countViewCol { //for horiz
                 let cellView = UIView()
                 // generate random color value for each box
@@ -60,10 +60,10 @@ class ViewController: UIViewController {
         // setup gesture detection
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
         
-//        // handle bottomBar if room
+//        // TODO bottomBar if room
 //        if (cell.truncatingRemainder(dividingBy: y) != 0) {
 //            let bottomView = UIImageView()
-//            bottomView.setImage
+//
 //        }
         
     }
