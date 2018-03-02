@@ -7,13 +7,16 @@
 //
 
 import UIKit
+import AVFoundation
 
 
 class ViewController: UIViewController {
     
     private var cell: CGFloat = 0
     private var cells = [String: UIView]() // Make Dic
-    private var selectedCell: UIView?
+    private var selectedCell: UIView?  // For tracking gest later
+    private let sounds = [1331,1323,1325,1329,1321,1330,1324,1332]
+    private var nextSound = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +42,7 @@ class ViewController: UIViewController {
 //        }
         
         // renderCells
-        for j in 0...countViewRow + 3 { //for vert
+        for j in 0...countViewRow { //for vert
             for i in 0...countViewCol { //for horiz
                 let cellView = UIView()
                 // generate random color value for each box
@@ -62,9 +65,9 @@ class ViewController: UIViewController {
         
     }
     
-    fileprivate func getSizeCount2 (x: CGFloat, y: CGFloat) {
-        
-    }
+//    fileprivate func getSizeCount2 (x: CGFloat, y: CGFloat) {
+//
+//    }
     
     fileprivate func getCellSizeCount (x: CGFloat, y: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
         
@@ -115,30 +118,40 @@ class ViewController: UIViewController {
         let location = gesture.location(in: view)
         let i = Int(location.x / cell)
         let j = Int(location.y / cell)
-        print(i, j)
+//        print(i, j)
         
         let key = "\(i)|\(j)"
         guard let over = cells[key] else { return }
         
         if selectedCell != over {
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                //return to scale value of 1
+                // return to scale value of 1
                 self.selectedCell?.layer.transform = CATransform3DIdentity
             }, completion: nil)
         }
         
-        //track selected cell
+        // track selected cell
         selectedCell = over
-        //bring to front
+        // bring to front
         view.bringSubview(toFront: over)
+       
         
-        //grow
+        // grow
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             over.layer.transform = CATransform3DMakeScale(3, 3, 3)
         }, completion: nil)
         
         //check for finger up
         if gesture.state == .ended {
+            //rotate through sounds on release
+            if (nextSound == 7) {
+                nextSound = 0
+            } else {
+                nextSound += 1
+            }
+            AudioServicesPlaySystemSound(UInt32(sounds[nextSound]))
+            
+            // release 
             UIView.animate(withDuration: 0.5, delay: 0.25, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
                 over.layer.transform = CATransform3DIdentity
             }, completion: nil)
@@ -147,10 +160,10 @@ class ViewController: UIViewController {
     }
     
     fileprivate func randomColor() -> UIColor {
-        // drand48 = Double rand from 0-1, cast to cgfloat
-        let red = CGFloat(drand48())
-        let green = CGFloat(drand48())
-        let blue = CGFloat(drand48())
+        // tried a couple different rands, nothing is less random than random, but this is random enough for a two year old
+        let red = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+        let green = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
+        let blue = CGFloat(Float(arc4random()) / Float(UINT32_MAX))
         
         return UIColor(red: red, green: green, blue: blue, alpha: 1)
     }
