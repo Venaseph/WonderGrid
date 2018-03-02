@@ -37,9 +37,6 @@ class ViewController: UIViewController {
         
         // handle for all size devices with view.frame to get box correct box size
         cell = cellSizeCount.0
-//        if (cell.truncatingRemainder(dividingBy: y) != 0) {
-//            header = y - (cell * CGFloat(countViewRow))
-//        }
         
         // renderCells
         for j in 0...countViewRow { //for vert
@@ -62,6 +59,12 @@ class ViewController: UIViewController {
         
         // setup gesture detection
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        
+//        // handle bottomBar if room
+//        if (cell.truncatingRemainder(dividingBy: y) != 0) {
+//            let bottomView = UIImageView()
+//            bottomView.setImage
+//        }
         
     }
     
@@ -151,7 +154,7 @@ class ViewController: UIViewController {
             }
             AudioServicesPlaySystemSound(UInt32(sounds[nextSound]))
             
-            // release 
+            // release animation
             UIView.animate(withDuration: 0.5, delay: 0.25, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
                 over.layer.transform = CATransform3DIdentity
             }, completion: nil)
